@@ -1,0 +1,9 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+<suite name="Find Friend Automation Suite" verbose="1">
+    <test name="Find Friend Tests">
+        <classes>
+            <class name="tests.DynamicFindFriendTest" />
+            <class name="tests.FindFriendTest" />
+        </classes>
+    </test>
+</suite>

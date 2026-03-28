@@ -1,0 +1,83 @@
+[
+  {
+    "testCaseId": "TC_001",
+    "testCaseName": "Verify Browse Professional Page Load",
+    "testData": {}
+  },
+  {
+    "testCaseId": "TC_002",
+    "testCaseName": "Verify Intent Filter – Find a Friend",
+    "testData": {
+      "intent": "Find a Friend"
+    }
+  },
+  {
+    "testCaseId": "TC_003",
+    "testCaseName": "Verify Intent Filter – Study Buddy",
+    "testData": {
+      "intent": "Study Buddy"
+    }
+  },
+  {
+    "testCaseId": "TC_004",
+    "testCaseName": "Verify Location Search",
+    "testData": {
+      "location": "Colombo"
+    }
+  },
+  {
+    "testCaseId": "TC_005",
+    "testCaseName": "Verify Main Category Dropdown",
+    "testData": {
+      "category": "Education"
+    }
+  },
+  {
+    "testCaseId": "TC_006",
+    "testCaseName": "Verify Sub Category Filter",
+    "testData": {
+      "subCategory": "Exam Preparation"
+    }
+  },
+  {
+    "testCaseId": "TC_007",
+    "testCaseName": "Verify Minimum Rating Filter",
+    "testData": {
+      "rating": 4
+    }
+  },
+  {
+    "testCaseId": "TC_008",
+    "testCaseName": "Verify Search Radius",
+    "testData": {
+      "radius": "10 km"
+    }
+  },
+  {
+    "testCaseId": "TC_009",
+    "testCaseName": "Verify Map Pin Location",
+    "testData": {
+      "mapPin": "Custom Location"
+    }
+  },
+  {
+    "testCaseId": "TC_010",
+    "testCaseName": "Verify Use My Location",
+    "testData": {
+      "gps": "User Location"
+    }
+  },
+  {
+    "testCaseId": "TC_011",
+    "testCaseName": "Verify Clear Pin Button",
+    "testData": {}
+  },
+  {
+    "testCaseId": "TC_012",
+    "testCaseName": "Verify No Results Message",
+    "testData": {
+      "rating": 5,
+      "radius": "1 km"
+    }
+  }
+]

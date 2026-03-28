@@ -12,46 +12,59 @@ import java.util.List;
 
 public class DynamicFindFriendTest extends BaseTest {
 
-    @DataProvider(name = "testDataFromJson")
-    public Object[][] getTestDataFromJson() throws Exception {
+    @DataProvider(name = "jsonData")
+    public Object[][] getData() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
-        InputStream is = getClass().getClassLoader().getResourceAsStream("testData.json");
-        List<TestCase> testCases = mapper.readValue(is, new TypeReference<List<TestCase>>() {});
+        InputStream is = getClass().getClassLoader().getResourceAsStream("testDataFind.json");
 
+        List<TestCase> testCases = mapper.readValue(is, new TypeReference<List<TestCase>>() {
+        });
         Object[][] data = new Object[testCases.size()][1];
+
         for (int i = 0; i < testCases.size(); i++) {
             data[i][0] = testCases.get(i);
         }
         return data;
     }
 
-    private void pause(long ms) {
-        try {
-            Thread.sleep(ms);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-    }
+    @Test(dataProvider = "jsonData")
+    public void runTest(TestCase tc) {
 
-    @Test(dataProvider = "testDataFromJson")
-    public void executeTestCases(TestCase testCase) {
         FindPage findPage = new FindPage(driver);
 
-        System.out.println("Executing Test Case: " + testCase.testCaseId + " - " + testCase.testCaseName);
+        System.out.println("Running: " + tc.testCaseId);
 
-        // After @BeforeClass login, navigate to Find/Browse flows
-        if (testCase.testCaseId.equals("TC_001")) {
-            findPage.openBrowseProfessional();
-            Assert.assertTrue(findPage.isBrowsePageLoaded(), "Browse page did not load for " + testCase.testCaseId);
-        } else if (testCase.testCaseId.equals("TC_002")) {
-            findPage.openBrowseProfessional();
-            findPage.selectFindFriend();
-            Assert.assertTrue(findPage.isResultsDisplayed(), "Results were not displayed for " + testCase.testCaseId);
-        } else {
-            System.out.println("Skipping automated execution for " + testCase.testCaseId + " (Mocked or not fully implemented)");
+        findPage.openBrowseProfessional();
+
+        if (tc.testData != null) {
+
+            if (tc.testData.containsKey("intent")) {
+                String intent = tc.testData.get("intent").toString();
+                if (intent.equalsIgnoreCase("Find a Friend")) {
+                    findPage.selectFindFriend();
+                } else if (intent.equalsIgnoreCase("Study Buddy")) {
+                    findPage.selectStudyBuddy();
+                }
+            }
+
+            if (tc.testData.containsKey("location")) {
+                findPage.enterLocation(tc.testData.get("location").toString());
+            }
+
+            if (tc.testData.containsKey("rating")) {
+                findPage.setRating((Integer) tc.testData.get("rating"));
+            }
+
+            if (tc.testData.containsKey("radius")) {
+                findPage.setRadius(tc.testData.get("radius").toString());
+            }
         }
 
-        // Keep the page visible for 3 seconds after each test case
-        pause(3000);
+        // Assertions
+        if (tc.testCaseId.equals("TC_012")) {
+            Assert.assertTrue(findPage.isNoResultsDisplayed(), "No results not shown");
+        } else {
+            Assert.assertTrue(findPage.isResultsDisplayed(), "Results not shown");
+        }
     }
 }
