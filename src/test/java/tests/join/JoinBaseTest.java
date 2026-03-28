@@ -1,8 +1,7 @@
 package tests.join;
-
-
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import pages.HomePage;
 import pages.JoinPage;
 import tests.BaseTest;
 
@@ -13,8 +12,8 @@ public class JoinBaseTest extends BaseTest {
 
     @BeforeMethod
     public void verifyJoinPage() {
-        joinPage = BasePage.initApp();
-        joinPage.clickJoin();
+        HomePage homePage = BasePage.initApp();
+        joinPage = homePage.clickJoin();
     }
 
     @Test

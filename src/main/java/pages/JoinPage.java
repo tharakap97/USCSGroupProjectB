@@ -4,12 +4,10 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
 public class JoinPage extends BasePage {
-
     public JoinPage(WebDriver driver) {
         super(driver);
     }
 
-    public static final By JOIN_BTN = By.xpath("//a[text()='Join']");
     //Common
     public static final By EMAIL_TEXT_FIELD = By.xpath("//label[text()='Email']/parent::div/child::input");
     public static final By PASSWORD_TEXT_FIELD = By.xpath("//label[text()='Password']/parent::div/child::input");
@@ -53,10 +51,6 @@ public class JoinPage extends BasePage {
 
     public void typeText(By locator, String text){
         type(locator, text);
-    }
-    public void clickJoin(){
-        locatorWaiting(JOIN_BTN);
-        click(JOIN_BTN);
     }
     public void clickCreateAcc() throws InterruptedException {
         locatorWaiting(CREATE_ACC_BTN);
