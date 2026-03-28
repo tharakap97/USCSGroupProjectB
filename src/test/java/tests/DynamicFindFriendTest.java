@@ -35,7 +35,7 @@ public class DynamicFindFriendTest extends BaseTest {
 
         // Pre-requisite step for this login-dependent test case
         if (testCase.preRequisites != null && testCase.preRequisites.contains("logged in")) {
-            // Replace "test@example.com" and "password" with real valid credentials
+            
             logInPage.login("www.sandunarjuna@gmail.com", "Sandun@071");
         }
 

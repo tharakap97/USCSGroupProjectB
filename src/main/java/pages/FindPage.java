@@ -6,9 +6,20 @@ import org.openqa.selenium.WebDriver;
 public class FindPage extends BasePage {
 
     // 🔹 Locators (update after inspecting real site)
-    private By browseProfessionalBtn = By.xpath("//a[contains(text(),'Browse')]");
-    private By findFriendOption = By.xpath("//span[contains(text(),'Find a Friend')]");
-    private By resultsSection = By.xpath("//div[contains(@class,'results')]");
+    private final By browseProfessionalBtn = By.xpath("//a[contains(text(),'Browse') or contains(text(),'Browse Professional')]");
+
+    // Intent option (may be a button/div/span depending on UI)
+    private final By findFriendOption = By.xpath(
+            "//*[self::span or self::button or self::div][contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'find a friend')]"
+    );
+
+    // Generic results markers
+    private final By resultsSection = By.xpath("//div[contains(@class,'results')] | //*[@data-testid='results'] | //*[contains(@class,'result')] ");
+
+    // Generic browse page markers (update when you know exact elements)
+    private final By browsePageMarker = By.xpath(
+            "//*[contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'browse')]"
+    );
 
     public FindPage(WebDriver driver) {
         super(driver);
@@ -24,11 +35,17 @@ public class FindPage extends BasePage {
         click(findFriendOption);
     }
 
-    public boolean isResultsDisplayed() {
-        waitForElement(resultsSection);
-        return driver.findElement(resultsSection).isDisplayed();
+    public boolean isBrowsePageLoaded() {
+        try {
+            locatorWaiting(browsePageMarker);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
-    private void waitForElement(By resultsSection) {
+    public boolean isResultsDisplayed() {
+        locatorWaiting(resultsSection);
+        return !driver.findElements(resultsSection).isEmpty() && driver.findElement(resultsSection).isDisplayed();
     }
 }
