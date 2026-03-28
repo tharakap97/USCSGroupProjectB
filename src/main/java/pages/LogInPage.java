@@ -21,13 +21,27 @@ public class LogInPage extends BasePage {
 
     private final By submitBtn = By.xpath("//button[@type='submit' or contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'log in') or contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'sign in')]");
 
-    // An optional locator that indicates user is logged in (update to something stable once known)
-    private final By loggedInMarker = By.xpath("//*[contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'logout') or contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'my profile')]");
+    // Marker to indicate login success (adjust if needed)
+    private final By loggedInMarker = By.xpath(
+            "//*[contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'logout')" +
+                    " or contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'my profile')]"
+    );
 
     public LogInPage(WebDriver driver) {
         super(driver);
     }
 
+    /**
+     * Returns true if the UI shows evidence that the user is logged in.
+     */
+    public boolean isLoggedIn() {
+        return !driver.findElements(loggedInMarker).isEmpty();
+    }
+
+    /**
+     * Logs in and waits until a post-login marker is visible.
+     * If login fails, this method will throw via locatorWaiting().
+     */
     public void login(String email, String password) {
         // Some pages require opening a login modal first.
         clickIfPresent(openLoginModalBtn);
@@ -36,12 +50,11 @@ public class LogInPage extends BasePage {
         type(passwordField, password);
         click(submitBtn);
 
-        // Best-effort verification: either URL changes or a logged-in marker appears.
-        // If this fails, it means the locators need to be aligned with the real DOM.
-        try {
-            locatorWaiting(loggedInMarker);
-        } catch (Exception ignored) {
-            // fall back: do not hard fail here; tests can still fail later if not logged in
-        }
+        // Deterministic verification: wait for a logged-in marker.
+        locatorWaiting(loggedInMarker);
+    }
+
+    public void goToSearchPage() {
+        driver.get("https://test.ineedtofindsomeonefor.com/search?parent_category_id=0&category_id=0&preferred_currency=LKR&lat=0&lng=0&radius_km=0");
     }
 }

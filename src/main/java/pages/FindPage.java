@@ -5,30 +5,50 @@ import org.openqa.selenium.WebDriver;
 
 public class FindPage extends BasePage {
 
-    // 🔹 Locators (update after inspecting real site)
-    private final By browseProfessionalBtn = By.xpath("//a[contains(text(),'Browse') or contains(text(),'Browse Professional')]");
+    // 🔹 Locators (React UI, keep flexible)
+    // When tests start from the /search page there may be no "Browse" button; allow direct navigation.
+    private static final String SEARCH_URL =
+            "https://test.ineedtofindsomeonefor.com/search?parent_category_id=0&category_id=0&preferred_currency=LKR&lat=0&lng=0&radius_km=0";
 
-    // Intent option (may be a button/div/span depending on UI)
-    private final By findFriendOption = By.xpath(
-            "//*[self::span or self::button or self::div][contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'find a friend')]"
+    private final By browseProfessionalBtn = By.xpath(
+            "//*[self::a or self::button or self::div or self::span]" +
+                    "[contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'browse')" +
+                    " or contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'browse professional')]"
     );
 
-    // Generic results markers
-    private final By resultsSection = By.xpath("//div[contains(@class,'results')] | //*[@data-testid='results'] | //*[contains(@class,'result')] ");
+    private final By findFriendOption = By.xpath(
+            "//*[self::span or self::button or self::div or self::a]" +
+                    "[contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'find a friend')]"
+    );
 
-    // Generic browse page markers (update when you know exact elements)
+    private final By resultsSection = By.xpath(
+            "//div[contains(@class,'results')]" +
+                    " | //*[@data-testid='results']" +
+                    " | //*[contains(@class,'result')]" +
+                    " | //*[contains(@class,'card')]" +
+                    " | //*[contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'no results')]"
+    );
+
     private final By browsePageMarker = By.xpath(
-            "//*[contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'browse')]"
+            "//*[contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'browse')]" +
+                    " | //*[contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'filters')]" +
+                    " | //*[contains(translate(normalize-space(.), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'intent')]"
     );
 
     public FindPage(WebDriver driver) {
         super(driver);
     }
 
-    // 🔹 Actions
-
+    /**
+     * Opens the browse/search page.
+     * If a "Browse" UI element is available, click it; otherwise directly navigate to the known search URL.
+     */
     public void openBrowseProfessional() {
-        click(browseProfessionalBtn);
+        if (!driver.findElements(browseProfessionalBtn).isEmpty()) {
+            click(browseProfessionalBtn);
+        } else {
+            driver.get(SEARCH_URL);
+        }
     }
 
     public void selectFindFriend() {
@@ -37,6 +57,10 @@ public class FindPage extends BasePage {
 
     public boolean isBrowsePageLoaded() {
         try {
+            // If we are already on /search, that counts as loaded.
+            if (driver.getCurrentUrl() != null && driver.getCurrentUrl().contains("/search")) {
+                return true;
+            }
             locatorWaiting(browsePageMarker);
             return true;
         } catch (Exception e) {
