@@ -16,5 +16,6 @@ public class BaseTest {
         driver = new ChromeDriver();
         driver.manage().window().maximize();
         BasePage = PageFactory.initElements(driver, BasePage.class);
+        BasePage.initApp();
     }
 }
