@@ -36,9 +36,30 @@ public class BasePage {
         clear(locator);
         driver.findElement(locator).sendKeys(text);
     }
+
     public void click(By locator){
         locatorWaiting(locator);
         driver.findElement(locator).click();
+    }
+
+    /**
+     * Click without requiring visibilityOfElementLocated. Useful for some modals/menus where Selenium sees the
+     * element but visibility wait times out.
+     */
+    public void clickIfPresent(By locator) {
+        if (driver.findElements(locator).isEmpty()) {
+            return;
+        }
+        driver.findElement(locator).click();
+    }
+
+    public void waitForUrlContains(String fragment) {
+        try{
+            Wait<WebDriver> wait = new WebDriverWait(driver, Duration.ofSeconds(EXPLICIT_WAIT_TIME_IN_SECONDS));
+            wait.until(d -> d != null && d.getCurrentUrl() != null && d.getCurrentUrl().contains(fragment));
+        }catch (Exception ex){
+            throw new RuntimeException("URL did not contain: " + fragment + " :: " + ex.getMessage());
+        }
     }
 
     public LogInPage initApp() {

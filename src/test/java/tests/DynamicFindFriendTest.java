@@ -6,6 +6,7 @@ import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import pages.FindPage;
+import pages.LogInPage;
 
 import java.io.InputStream;
 import java.util.List;
@@ -28,7 +29,15 @@ public class DynamicFindFriendTest extends BaseTest {
     @Test(dataProvider = "testDataFromJson")
     public void executeTestCases(TestCase testCase) {
         FindPage findPage = new FindPage(driver);
+        LogInPage logInPage = new LogInPage(driver);
+
         System.out.println("Executing Test Case: " + testCase.testCaseId + " - " + testCase.testCaseName);
+
+        // Pre-requisite step for this login-dependent test case
+        if (testCase.preRequisites != null && testCase.preRequisites.contains("logged in")) {
+            // Replace "test@example.com" and "password" with real valid credentials
+            logInPage.login("www.sandunarjuna@gmail.com", "Sandun@071");
+        }
 
         if (testCase.testCaseId.equals("TC_001") || testCase.testCaseId.equals("TC_002")) {
             findPage.openBrowseProfessional();
