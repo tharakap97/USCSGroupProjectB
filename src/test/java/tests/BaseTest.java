@@ -3,6 +3,7 @@ package tests;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.PageFactory;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import pages.BasePage;
 
@@ -17,5 +18,12 @@ public class BaseTest {
         driver.manage().window().maximize();
         BasePage = PageFactory.initElements(driver, BasePage.class);
         BasePage.initApp();
+    }
+
+    @AfterClass
+    public void teardownBrowser(){
+        if(driver != null){
+            driver.quit();
+        }
     }
 }
