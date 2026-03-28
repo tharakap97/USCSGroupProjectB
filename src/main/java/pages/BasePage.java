@@ -41,9 +41,9 @@ public class BasePage {
         driver.findElement(locator).click();
     }
 
-    public LogInPage initApp() {
+    public HomePage initApp() {
         driver.get("https://test.ineedtofindsomeonefor.com/");
-        return PageFactory.initElements(driver, LogInPage.class);
+        return PageFactory.initElements(driver, HomePage.class);
     }
 
 }
