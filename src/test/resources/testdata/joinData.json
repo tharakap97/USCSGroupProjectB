@@ -1,0 +1,92 @@
+{
+  "TCL-004": {
+    "invalidEmails": ["test.com", "test@com", "test", ""],
+    "password": "#ABCabc123",
+    "displayName": "Dulki",
+    "city": "Horana",
+    "country": "Sri Lanka",
+    "bio": "Test Seeker Account"
+  },
+  "TCL-005": {
+    "existingEmail": "dilsharadulki@gmail.com",
+    "password": "#ABCabc123",
+    "displayName": "Dulki",
+    "city": "Horana",
+    "country": "Sri Lanka",
+    "bio": "Test Seeker Account"
+  },
+  "TCL-006": {
+    "email": "qa3@ineedtofindsomeonefor.com",
+    "invalidPasswords": ["12345", "password", "PASSWORD", "Pass123"],
+    "displayName": "Dulki",
+    "city": "Horana",
+    "country": "Sri Lanka",
+    "bio": "Test Seeker Account"
+  },
+  "TCL-009": {
+    "email": "qa3@ineedtofindsomeonefor.com",
+    "password": "#ABCabc123",
+    "invalidDisplayNames": ["1", "a", ""],
+    "city": "Horana",
+    "country": "Sri Lanka",
+    "bio": "Test Seeker Account"
+  },
+  "TCL-013": {
+    "email": "qa3@ineedtofindsomeonefor.com",
+    "password": "#ABCabc123",
+    "displayName": "Dulki",
+    "invalidCity": "1",
+    "country": "Sri Lanka",
+    "bio": "Test Seeker Account"
+  },
+  "TCL-014": {
+    "email": "qa3@ineedtofindsomeonefor.com",
+    "password": "#ABCabc123",
+    "displayName": "Dulki",
+    "city": "Horana",
+    "country": "Sri Lanka",
+    "invalidBio": ""
+  },
+  "TCL-017": {
+    "email": "qa3@ineedtofindsomeonefor.com",
+    "password": "#ABCabc123",
+    "displayName": "Dulki",
+    "city": "Horana",
+    "country": "Sri Lanka",
+    "bio": "Test Seeker Account"
+  },
+  "TCL-018": {
+    "email": "qa3@ineedtofindsomeonefor.com",
+    "password": "#ABCabc123",
+    "displayName": "Dulki Professional",
+    "city": "Colombo",
+    "country": "Sri Lanka",
+    "bio": "Expert Professional Bio",
+    "categories": ["Education", "Select category..."],
+    "hourlyRate": "5000",
+    "experience": "5",
+    "primaryWorkArea": "Colombo 05",
+    "preferredSurroundingAreas": "Nugegoda, Rajagiriya, Battaramulla",
+    "rateCurrency": "LKR"
+  },
+  "TCL-019": {
+    "categories": ["Design","Education", "Friend"]
+  },
+  "TCL-020": {
+    "email": "qa3@ineedtofindsomeonefor.com",
+    "password": "#ABCabc123",
+    "displayName": "Dulki Professional",
+    "city": "Colombo",
+    "country": "Sri Lanka",
+    "bio": "Expert Professional Bio",
+    "specialtiesData": {
+      "Education": ["Mathematics", "Language Tutor"],
+      "Design": ["3D & Animation", "UI/UX Design"]
+    },
+    "hourlyRate": "5000",
+    "experience": "5",
+    "primaryWorkArea": "Colombo 05",
+    "preferredSurroundingAreas": "Nugegoda, Rajagiriya, Battaramulla",
+    "rateCurrency": "LKR"
+  }
+}

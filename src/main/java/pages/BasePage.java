@@ -12,7 +12,7 @@ import java.time.Duration;
 public class BasePage {
 
     protected WebDriver driver;
-    public static final long EXPLICIT_WAIT_TIME_IN_SECONDS = 10;
+    public static final long EXPLICIT_WAIT_TIME_IN_SECONDS = 50;
 
     public BasePage(WebDriver driver) {
         this.driver = driver;
@@ -27,13 +27,8 @@ public class BasePage {
         }
     }
 
-    public void clear(By locator){
-        locatorWaiting(locator);
-    }
-
     public void type(By locator, String text){
         locatorWaiting(locator);
-        clear(locator);
         driver.findElement(locator).sendKeys(text);
     }
     public void click(By locator){
