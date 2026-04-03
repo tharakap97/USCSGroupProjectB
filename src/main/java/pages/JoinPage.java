@@ -76,6 +76,9 @@ public class JoinPage extends BasePage {
     public boolean isBtnSelected(By locator) {
         return driver.findElement(locator).isSelected();
     }
+    public void clearField(By locator) {
+        driver.findElement(locator).clear();
+    }
     public void fillProfessionalSpecificFields(String experience, String hourlyRate, String primaryWorkArea,
                                                String preferredSurroundingAreas, String rateCurrency) {
         type(EXP_YR_SELECTOR, experience);
@@ -85,6 +88,24 @@ public class JoinPage extends BasePage {
         locatorWaiting(RATE_CURRENCY_DROPDOWN);
         Select currencySelect = new Select(driver.findElement(RATE_CURRENCY_DROPDOWN));
         currencySelect.selectByVisibleText(rateCurrency);
+    }
+    public void fillEmailFields(String email) {
+        type(JoinPage.EMAIL_TEXT_FIELD, email);
+    }
+    public void fillPwFields(String password) {
+        type(JoinPage.PASSWORD_TEXT_FIELD, password);
+    }
+    public void fillDisplayNameFields(String displayName){
+        type(JoinPage.DISPLAY_NAME_TEXT_FIELD, displayName);
+    }
+    public void fillCityFields(String city) {
+        type(JoinPage.CITY_TEXT_FIELD, city);
+    }
+    public void fillCountryFields(String country) {
+        type(JoinPage.COUNTRY_TEXT_FIELD, country);
+    }
+    public void fillBioFields(String bio){
+        type(JoinPage.BIO_TEXT_FIELD, bio);
     }
     public void selectProfRadio() {
         click(REG_AS_RADIO_PROF);
@@ -131,6 +152,20 @@ public class JoinPage extends BasePage {
         }
         return textList;
     }
+    public String getFirstCatOption() {
+        Select select = new Select(driver.findElement(CATEGORY_DROPDOWN));
+        return select.getFirstSelectedOption().getText();
+    }
+    public String getFirstSubCatOption() {
+        Select select = new Select(driver.findElement(SUB_CATEGORY_DROPDOWN));
+        return select.getFirstSelectedOption().getText();
+    }
+    public void clickSubCategoryRemove() {
+        click(SUB_CATEGORY_REMOVE_BTN);
+    }
+    public void clickSubCategoryClearAll() {
+        click(SUB_CATEGORY_CLEAR_ALL_BTN);
+    }
     public boolean isCountryFieldReadOnly() {
         locatorWaiting(COUNTRY_TEXT_FIELD);
         WebElement countryInput = driver.findElement(COUNTRY_TEXT_FIELD);
@@ -140,6 +175,16 @@ public class JoinPage extends BasePage {
     }
     public String getCountryValue() {
         return driver.findElement(COUNTRY_TEXT_FIELD).getAttribute("value");
+    }
+    public String getRateCurrencyValue() {
+        locatorWaiting(RATE_CURRENCY_DROPDOWN);
+        Select currencySelect = new Select(driver.findElement(RATE_CURRENCY_DROPDOWN));
+        WebElement selectedOption = currencySelect.getFirstSelectedOption();
+        return selectedOption.getText().trim();
+    }
+    public void fillServiceRadius(String serviceRadius) {
+        clearField(SERVICE_RADIUS_SELECTOR);
+        type(SERVICE_RADIUS_SELECTOR, serviceRadius);
     }
     public String getValidationMsg(By locator) {
         locatorWaiting(locator);
