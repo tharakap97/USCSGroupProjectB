@@ -681,6 +681,32 @@ public class JoinValidationTest extends BaseTest {
 
     }
 
+    @Test(description = "TCL-029: Verify Service location selection using Click my location button")
+    public void verifyServiceLocationPin() {
+        joinPage.selectProfRadio();
+        joinPage.selectServiceLocation();
+
+        String serLocMsg = joinPage.getValidationMsg(JoinPage.SERVICE_LOC_MSG);
+        Assert.assertTrue(serLocMsg.contains("Selected:"),
+                "Expected 'Selected:' in message, but actual message was: " + serLocMsg);
+    }
+
+    @Test(description = "TCL-030: Verify Service location pin- Clear pin button working properly.")
+    public void verifyServiceLocationClearPin() {
+        SoftAssert softAssert = new SoftAssert();
+        joinPage.selectProfRadio();
+        joinPage.selectServiceLocation();
+        joinPage.clearServiceLocationPin();
+
+        softAssert.assertFalse(joinPage.isElementDisplayed(JoinPage.MAP_PIN_ICON), "Map pin icon should be not visible after clearing the pin.");
+
+        String serLocMsg = joinPage.getValidationMsg(JoinPage.SERVICE_LOC_MSG);
+        softAssert.assertFalse(serLocMsg.contains("Selected:"),
+                "Not expected 'Selected:' in message, but actual message was: " + serLocMsg);
+
+        softAssert.assertAll();
+    }
+
     @Test(description = "TCL-031: Verify Professional Account create correctly")
     public void verifyProfAcc() throws InterruptedException {
 

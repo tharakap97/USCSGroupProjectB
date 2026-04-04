@@ -49,6 +49,7 @@ public class JoinPage extends BasePage {
             .xpath("//label[text()='Service radius (km)']/parent::div/child::input");
     public static final By SERVICE_LOCATION_PIN_SELECTOR = By
             .xpath("//label[text()='Service location pin']/parent::div/child::div");
+    public static final By MAP_PIN_ICON =  By.className("leaflet-marker-icon");
     public static final By USE_MY_LOCATION_BTN = By
             .xpath("//div[@class='cluster']/child::button[text()='Use my location']");
     public static final By CLEAR_PIN_BTN = By.xpath("//div[@class='cluster']/child::button[text()='Clear pin']");
@@ -64,7 +65,7 @@ public class JoinPage extends BasePage {
 
     public static final By ERROR_MSG = By.xpath("//div[@class='muted' and contains(@style, 'crimson')]");
     public static final By SPE_MSG = By.xpath("//label[text()='Specialties']/following-sibling::div/child::div[@class='muted']");
-
+    public static final By SERVICE_LOC_MSG = By.xpath("//label[text()='Service location pin']/following-sibling::div[@class='muted']");
     public boolean isElementDisplayed(By locator) {
         try {
             locatorWaiting(locator);
@@ -185,6 +186,13 @@ public class JoinPage extends BasePage {
     public void fillServiceRadius(String serviceRadius) {
         clearField(SERVICE_RADIUS_SELECTOR);
         type(SERVICE_RADIUS_SELECTOR, serviceRadius);
+    }
+    public void selectServiceLocation() {
+        click(USE_MY_LOCATION_BTN);
+        locatorWaiting(MAP_PIN_ICON);
+    }
+    public void clearServiceLocationPin() {
+        click(CLEAR_PIN_BTN);
     }
     public String getValidationMsg(By locator) {
         locatorWaiting(locator);
