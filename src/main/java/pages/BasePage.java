@@ -36,6 +36,31 @@ public class BasePage {
         driver.findElement(locator).click();
     }
 
+    public String getAttribute(By locator, String attributeName){
+        locatorWaiting(locator);
+        return driver.findElement(locator).getAttribute(attributeName);
+    }
+
+    public void clear(By locator){
+        locatorWaiting(locator);
+        driver.findElement(locator).clear();
+    }
+
+    public String getSelectedOptionText(By locator){
+        locatorWaiting(locator);
+        return driver.findElement(locator).getText();
+    }
+
+    public void selectDropdownOption(By locator, String optionText){
+        locatorWaiting(locator);
+        driver.findElement(locator).click();
+    }
+
+    public void selectDropdownByValue(By locator, String value){
+        locatorWaiting(locator);
+        driver.findElement(locator).sendKeys(value);
+    }
+
     public HomePage initApp() {
         driver.get("https://test.ineedtofindsomeonefor.com/");
         return PageFactory.initElements(driver, HomePage.class);
