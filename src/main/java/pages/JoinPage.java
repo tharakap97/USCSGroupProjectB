@@ -1,9 +1,12 @@
 package pages;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +15,7 @@ public class JoinPage extends BasePage {
         super(driver);
     }
 
-    public static final By CREAT_ACC_PAGE = By.xpath("//h2[text()='Create your account']/parent::div");
+    public static final By CREATE_ACC_PAGE = By.xpath("//h2[text()='Create your account']/parent::div");
     public static final By EMAIL_TEXT_FIELD = By.xpath("//label[text()='Email']/parent::div/child::input");
     public static final By PASSWORD_TEXT_FIELD = By.xpath("//label[text()='Password']/parent::div/child::input");
     public static final By DISPLAY_NAME_TEXT_FIELD = By.xpath("//label[text()='Display name']/parent::div/child::input");
@@ -21,6 +24,7 @@ public class JoinPage extends BasePage {
     public static final By ZOOM_RESIZER = By.xpath("//label[text()='Zoom']/parent::div/child::input[@type='range']");
     public static final By USE_THIS_CROP_BTN = By.xpath("//div[@class='cluster']/child::button[text()='Use this crop']");
     public static final By CANCEL_BTN = By.xpath("//div[@class='cluster']/child::button[text()='Cancel']");
+    public static final By IMG_ERR = By.xpath("//h3[text()='Adjust profile picture']/following-sibling::div[@class='muted' and @style='color: crimson;']");
     public static final By REG_AS_RADIO_SEEKER = By.xpath("//label[text()='I am registering as']/following-sibling::div/descendant::input[@value='seeker']");
     public static final By REG_AS_RADIO_PROF= By.xpath("//label[text()='I am registering as']/following-sibling::div/descendant::input[@value='professional']");
     public static final By REG_AS_RADIO_BOTH = By.xpath("//label[text()='I am registering as']/following-sibling::div/descendant::input[@value='both']");
@@ -66,20 +70,7 @@ public class JoinPage extends BasePage {
     public static final By ERROR_MSG = By.xpath("//div[@class='muted' and contains(@style, 'crimson')]");
     public static final By SPE_MSG = By.xpath("//label[text()='Specialties']/following-sibling::div/child::div[@class='muted']");
     public static final By SERVICE_LOC_MSG = By.xpath("//label[text()='Service location pin']/following-sibling::div[@class='muted']");
-    public boolean isElementDisplayed(By locator) {
-        try {
-            locatorWaiting(locator);
-            return driver.findElement(locator).isDisplayed();
-        } catch (Exception e) {
-            return false;
-        }
-    }
-    public boolean isBtnSelected(By locator) {
-        return driver.findElement(locator).isSelected();
-    }
-    public void clearField(By locator) {
-        driver.findElement(locator).clear();
-    }
+
     public void fillProfessionalSpecificFields(String experience, String hourlyRate, String primaryWorkArea,
                                                String preferredSurroundingAreas, String rateCurrency) {
         type(EXP_YR_SELECTOR, experience);
@@ -98,6 +89,26 @@ public class JoinPage extends BasePage {
     }
     public void fillDisplayNameFields(String displayName){
         type(JoinPage.DISPLAY_NAME_TEXT_FIELD, displayName);
+    }
+    public void uploadProfilePicture(String fileName) {
+        File file = new File("src/test/resources/testdata/" + fileName);
+        String absolutePath = file.getAbsolutePath();
+        driver.findElement(PROFILE_PIC_TEXT_FIELD).sendKeys(absolutePath);
+    }
+    public void adjustZoom(String value) {
+        locatorWaiting(ZOOM_RESIZER);
+        WebElement slider = driver.findElement(ZOOM_RESIZER);
+        ((JavascriptExecutor) driver).executeScript("arguments[0].value = arguments[1]; arguments[0].dispatchEvent(new Event('input'))", slider, value);
+    }
+    public String getZoomValue() {
+        return driver.findElement(ZOOM_RESIZER).getAttribute("value");
+    }
+    public String getUploadedFileName() {
+        WebElement fileInput = driver.findElement(PROFILE_PIC_TEXT_FIELD);
+        String filePath = fileInput.getAttribute("value");
+        if (filePath == null || filePath.isEmpty()) return "";
+        int lastSlash = Math.max(filePath.lastIndexOf('/'), filePath.lastIndexOf('\\'));
+        return lastSlash >= 0 ? filePath.substring(lastSlash + 1) : filePath;
     }
     public void fillCityFields(String city) {
         type(JoinPage.CITY_TEXT_FIELD, city);
