@@ -15,11 +15,12 @@ import org.testng.asserts.SoftAssert;
 
 public class JoinValidationTest extends BaseTest {
     private JoinPage joinPage;
+    private HomePage homePage;
 
     @BeforeMethod
     public void setupTest() {
-        HomePage homePage = new BasePage(driver).initApp();
-        joinPage = homePage.clickJoin();
+        this.homePage = new BasePage(driver).initApp();
+        joinPage = this.homePage.clickJoin();
     }
 
     @Test(description = "TCL-003 Verify Empty Mandatory Fields in Seeker Account")
@@ -170,7 +171,58 @@ public class JoinValidationTest extends BaseTest {
                     "Expected Display name error, but got: " + errMsg);
         }
     }
+    @Test(description = "TCL-010: Verify Profile Picture Upload , Zoom Reset and Cancel Functionality")
+    public void testProfilePictureUpload() {
+        SoftAssert softAssert = new SoftAssert();
+        String imageFile1 = "image1.jpg";
+        String imageFile2 = "image2.png";
 
+        joinPage.uploadProfilePicture(imageFile1);
+        softAssert.assertTrue(homePage.isElementDisplayed(JoinPage.ADJUST_PRO_PIC_POP_UP),
+                "Should not be on Adjust pro. picture page");
+
+        joinPage.adjustZoom("50");
+        joinPage.click(JoinPage.USE_THIS_CROP_BTN);
+
+        String actualName = joinPage.getUploadedFileName();
+        softAssert.assertTrue(actualName.contains(imageFile1),
+                "Image name should be displayed after successful crop. Actual: " + actualName);
+
+        joinPage.uploadProfilePicture(imageFile2);
+        String currentZoom = joinPage.getZoomValue();
+        softAssert.assertEquals(currentZoom, "0", "Zoomer should reset to default (0) on new upload.");
+
+        joinPage.uploadProfilePicture(imageFile1);
+        joinPage.click(JoinPage.CANCEL_BTN);
+
+        String finalFileName = joinPage.getUploadedFileName();
+        softAssert.assertFalse(finalFileName.contains(imageFile1),
+                "The cancelled image name should not be displayed.");
+
+        softAssert.assertAll();
+    }
+    @Test(description = "TCL-011: Verify Profile Picture Invalid File Upload")
+    public void testProfilePictureInvalidUpload() {
+        SoftAssert softAssert = new SoftAssert();
+        String invalidFile = "TestPDF.pdf";
+
+        joinPage.uploadProfilePicture(invalidFile);
+        softAssert.assertFalse(homePage.isElementDisplayed(JoinPage.ADJUST_PRO_PIC_POP_UP),
+                "File format should be png or jpg, but adjust pop up is displayed.");
+
+        joinPage.adjustZoom("50");
+        joinPage.click(JoinPage.USE_THIS_CROP_BTN);
+        String actualText = joinPage.getValidationMsg(JoinPage.IMG_ERR);
+        softAssert.assertTrue(actualText.contains("Could not load image"),
+                "Error message should be displayed");
+
+        joinPage.click(JoinPage.CANCEL_BTN);
+        String finalFileName = joinPage.getUploadedFileName();
+        softAssert.assertFalse(finalFileName.contains(invalidFile),
+                "The cancelled file name should not be displayed.");
+
+        softAssert.assertAll();
+    }
     @Test(description = "TCL-013: Invalid City Field")
     public void verifyCityTF() {
         String validEmail = JsonReader.get("TCL-013", "email");
@@ -188,7 +240,7 @@ public class JoinValidationTest extends BaseTest {
         joinPage.fillBioFields(validBio);
         joinPage.clickCreateAccount();
 
-        Assert.assertFalse(joinPage.isElementDisplayed(JoinPage.VERIFY_EMAIL_POPUP), "Should not be on verify page");
+        Assert.assertFalse(homePage.isElementDisplayed(JoinPage.VERIFY_EMAIL_POPUP), "Should not be on verify page");
         String errMsg = joinPage.getValidationMsg(JoinPage.ERROR_MSG);
         Assert.assertTrue(errMsg.contains("City should be valid text") ,
                 "Expected City error, but got: " + errMsg);
@@ -211,7 +263,7 @@ public class JoinValidationTest extends BaseTest {
         joinPage.fillBioFields(invalidBio);
         joinPage.clickCreateAccount();
 
-        Assert.assertTrue(joinPage.isElementDisplayed(JoinPage.VERIFY_EMAIL_POPUP), "Should be on verify page");
+        Assert.assertTrue(homePage.isElementDisplayed(JoinPage.VERIFY_EMAIL_POPUP), "Should be on verify page");
     }
 
     @Test(description = "TCL-016: Verify Country field is read-only and defaults to Sri Lanka")
@@ -249,7 +301,7 @@ public class JoinValidationTest extends BaseTest {
         joinPage.fillBioFields(validBio);
         joinPage.clickCreateAccount();
 
-        Assert.assertTrue(joinPage.isElementDisplayed(JoinPage.VERIFY_EMAIL_POPUP), "Should be on verify page");
+        Assert.assertTrue(homePage.isElementDisplayed(JoinPage.VERIFY_EMAIL_POPUP), "Should be on verify page");
     }
 
     @Test(description = "TCL-018: Verify Specialties - Category dropdown validations")
@@ -359,7 +411,7 @@ public class JoinValidationTest extends BaseTest {
         String speMsg = joinPage.getValidationMsg(JoinPage.SPE_MSG);
         softAssert.assertTrue(speMsg.contains("Selected sub-category has been added."),
                 "Expected No Specialty error, but got: " + speMsg);
-        softAssert.assertTrue(joinPage.isElementDisplayed(JoinPage.VERIFY_EMAIL_POPUP), "Should be on verify page");
+        softAssert.assertTrue(homePage.isElementDisplayed(JoinPage.VERIFY_EMAIL_POPUP), "Should be on verify page");
 
         softAssert.assertAll();
     }
@@ -496,7 +548,7 @@ public class JoinValidationTest extends BaseTest {
         joinPage.fillBioFields(validBio);
         joinPage.clickCreateAccount();
 
-        Assert.assertFalse(joinPage.isElementDisplayed(JoinPage.VERIFY_EMAIL_POPUP), "Should not be on verify page");
+        Assert.assertFalse(homePage.isElementDisplayed(JoinPage.VERIFY_EMAIL_POPUP), "Should not be on verify page");
 
         String errMsg = joinPage.getValidationMsg(JoinPage.ERROR_MSG);
         Assert.assertTrue(errMsg.contains("Hourly Rate must be a valid number"),
@@ -536,7 +588,7 @@ public class JoinValidationTest extends BaseTest {
             joinPage.fillBioFields(validBio);
             joinPage.clickCreateAccount();
 
-        Assert.assertFalse(joinPage.isElementDisplayed(JoinPage.VERIFY_EMAIL_POPUP), "Should not be on verify page");
+        Assert.assertFalse(homePage.isElementDisplayed(JoinPage.VERIFY_EMAIL_POPUP), "Should not be on verify page");
 
         String errMsg = joinPage.getValidationMsg(JoinPage.ERROR_MSG);
         Assert.assertTrue(errMsg.contains("Primary Work Area must be a valid area"),
@@ -576,7 +628,7 @@ public class JoinValidationTest extends BaseTest {
         joinPage.fillBioFields(validBio);
         joinPage.clickCreateAccount();
 
-        Assert.assertFalse(joinPage.isElementDisplayed(JoinPage.VERIFY_EMAIL_POPUP), "Should not be on verify page");
+        Assert.assertFalse(homePage.isElementDisplayed(JoinPage.VERIFY_EMAIL_POPUP), "Should not be on verify page");
 
         String errMsg = joinPage.getValidationMsg(JoinPage.ERROR_MSG);
         Assert.assertTrue(errMsg.contains("Preferred Surrounding Area must be a valid area"),
@@ -698,7 +750,7 @@ public class JoinValidationTest extends BaseTest {
         joinPage.selectServiceLocation();
         joinPage.clearServiceLocationPin();
 
-        softAssert.assertFalse(joinPage.isElementDisplayed(JoinPage.MAP_PIN_ICON), "Map pin icon should be not visible after clearing the pin.");
+        softAssert.assertFalse(homePage.isElementDisplayed(JoinPage.MAP_PIN_ICON), "Map pin icon should be not visible after clearing the pin.");
 
         String serLocMsg = joinPage.getValidationMsg(JoinPage.SERVICE_LOC_MSG);
         softAssert.assertFalse(serLocMsg.contains("Selected:"),
@@ -739,7 +791,7 @@ public class JoinValidationTest extends BaseTest {
         joinPage.fillBioFields(validBio);
         joinPage.clickCreateAccount();
 
-        Assert.assertTrue(joinPage.isElementDisplayed(JoinPage.VERIFY_EMAIL_POPUP), "Should be on verify page");
+        Assert.assertTrue(homePage.isElementDisplayed(JoinPage.VERIFY_EMAIL_POPUP), "Should be on verify page");
 
     }
 
@@ -775,7 +827,7 @@ public class JoinValidationTest extends BaseTest {
         joinPage.fillBioFields(validBio);
         joinPage.clickCreateAccount();
 
-        Assert.assertTrue(joinPage.isElementDisplayed(JoinPage.VERIFY_EMAIL_POPUP), "Should be on verify page");
+        Assert.assertTrue(homePage.isElementDisplayed(JoinPage.VERIFY_EMAIL_POPUP), "Should be on verify page");
 
     }
 }

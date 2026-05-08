@@ -61,6 +61,20 @@ public class BasePage {
         driver.findElement(locator).sendKeys(value);
     }
 
+    public boolean isElementDisplayed(By locator) {
+        try {
+            locatorWaiting(locator);
+            return driver.findElement(locator).isDisplayed();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+    public boolean isBtnSelected(By locator) {
+        return driver.findElement(locator).isSelected();
+    }
+    public void clearField(By locator) {
+        driver.findElement(locator).clear();
+    }
     public HomePage initApp() {
         driver.get("https://test.ineedtofindsomeonefor.com/");
         return PageFactory.initElements(driver, HomePage.class);
